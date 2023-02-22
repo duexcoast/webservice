@@ -26,7 +26,7 @@ KIND_CLUSTER := ardan-starter-cluster
 
 kind-up:
 	kind create cluster \
-		--image kindest/node:v1.26.0@sha256:36a22ea7ff0381daf50b12fd1d41e8cd8f6625a4041b6e4d41f084adbe8c2da1 \
+		--image kindest/node:v1.20.15@sha256:a32bf55309294120616886b5338f95dd98a2f7231519c7dedcec32ba29699394 \
 		--name $(KIND_CLUSTER) \
 		--config zarf/k8s/kind/kind-config.yaml 
 
@@ -36,3 +36,13 @@ kind-down:
 kind-status:
 	kubectl get nodes -o wide
 	kubectl get svc -o wide
+	kubectl get pods -o wide --watch --all-namespaces
+
+kind-load:
+	kind load docker-image service-arm64:$(VERSION) --name $(KIND_CLUSTER)
+
+kind-apply:
+	cat zarf/k8s/base/service-pod/base-service.yaml | kubectl apply -f -
+
+kind-logs:
+	kubectl logs --namespace=service-system -l app=service --all-containers=true -f --tail=100 

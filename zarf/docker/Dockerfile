@@ -1,5 +1,5 @@
 # Build the Go binary
-FROM golang:1.17 as build_sales-api
+FROM golang:1.20 as build_sales-api
 ENV CGO_ENABLED 0
 ARG BUILD_REF
 
@@ -20,3 +20,7 @@ CMD ["./service"]
 
 LABEL	org.opencontainers.image.created="${BUILD_DATE}" \
 		org.opencontainers.image.title="sales-api" \
+    org.opencontainers.image.authors="Conor Ney" \
+    org.opencontainers.image.source="github.com/duexcoast/webservice" \
+    org.opencontainers.image.revision="${BUILD_REF}" \
+    org.opencontainers.image.vendor="duex coast"
