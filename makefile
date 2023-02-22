@@ -46,3 +46,11 @@ kind-apply:
 
 kind-logs:
 	kubectl logs --namespace=service-system -l app=service --all-containers=true -f --tail=100 
+
+kind-restart:
+	kubectl rollout restart deployment service-pod --namespace=service-system
+
+kind-update: all kind-load kind-restart
+
+kind-describe:
+	kubectl describe pod -l app=service

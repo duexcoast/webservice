@@ -11,10 +11,10 @@ WORKDIR /service
 RUN go build -ldflags "-X main.build=${BUILD_REF}"
 
 # Run the Go binary in Alpine
-FROM alpine:3.14
+FROM alpine:3.17
 ARG BUILD_DATE
 ARG BUILD_REF
-COPY --from=build_sales-api /service /service/service
+COPY --from=build_sales-api /service/service /service/service
 WORKDIR /service
 CMD ["./service"]
 
