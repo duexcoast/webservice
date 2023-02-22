@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 
 run:
-	run go run main.go
+	go run main.go
 
 # =======================================================================
 # Building containers
@@ -53,4 +53,4 @@ kind-restart:
 kind-update: all kind-load kind-restart
 
 kind-describe:
-	kubectl describe pod -l app=service
+	kubectl describe pod --namespace=service-system -l app=service
