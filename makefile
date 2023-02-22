@@ -38,11 +38,14 @@ kind-status:
 	kubectl get svc -o wide
 	kubectl get pods -o wide --watch --all-namespaces
 
+kind-status-service:
+	kubectl get pods -o wide --watch --namespace=service-system
+
 kind-load:
 	kind load docker-image service-arm64:$(VERSION) --name $(KIND_CLUSTER)
 
 kind-apply:
-	cat zarf/k8s/base/service-pod/base-service.yaml | kubectl apply -f -
+	kustomize build zarf/k8s/kind/service-pod | kubectl apply -f -
 
 kind-logs:
 	kubectl logs --namespace=service-system -l app=service --all-containers=true -f --tail=100 
@@ -52,5 +55,15 @@ kind-restart:
 
 kind-update: all kind-load kind-restart
 
+kind-update-apply: all kind-load kind-apply
+
 kind-describe:
 	kubectl describe pod --namespace=service-system -l app=service
+
+
+# =======================================================================
+# Modules support
+
+tidy:
+	go mod tidy
+	go mod vendor
