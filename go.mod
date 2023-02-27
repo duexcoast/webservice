@@ -1,4 +1,4 @@
-module github.com/ardanlabs/service
+module github.com/duexcoast/webservice
 
 go 1.19
 
