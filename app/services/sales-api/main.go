@@ -182,7 +182,5 @@ func run(log *zap.SugaredLogger) error {
 			return fmt.Errorf("could not stop server gracefully: %w", err)
 		}
 	}
-
 	return nil
-
 }
