@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"errors"
-	"expvar"
 	"fmt"
 	"net/http"
 	"os"
@@ -110,7 +109,7 @@ func run(log *zap.SugaredLogger) error {
 	}
 	log.Infow("startup", "config", out)
 
-	expvar.NewString
+	// expvar.NewString
 
 	// ====================================================================================
 	// Starting Debug Service
@@ -140,6 +139,12 @@ func run(log *zap.SugaredLogger) error {
 	// Use a buffered channel because the signal package requires it.
 	shutdown := make(chan os.Signal, 1)
 	signal.Notify(shutdown, syscall.SIGINT, syscall.SIGTERM)
+
+	// Construct the mux for the API calls.
+	apiMux := handlers.APIMux(handlers.APIMuxConfig{
+		Shutdown: shutdown,
+		Log:      log,
+	})
 
 	// Construct a server to service the requests against the mux.
 	api := http.Server{
