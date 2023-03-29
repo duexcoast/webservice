@@ -40,4 +40,26 @@ func (a *App) SignalShutdown() {
 // application server mux.
 func (a *App) Handle(method string, group string, path string, handler Handler) {
 
+	h := func(w http.ResponseWriter, r *http.Request) {
+
+		// PRE CODE PROCESSING
+		// Logging started
+
+		if err := handler(r.Context(), w, r); err != nil {
+			// Logging error - handle it
+			// ERROR HANDLING
+			return
+		}
+
+		// Logging ended
+		// POST CODE PROCESSING
+
+	}
+
+	finalPath := path
+	if group != "" {
+		finalPath = "/" + group + path
+	}
+
+	a.ContextMux.Handle(method, finalPath, h)
 }
