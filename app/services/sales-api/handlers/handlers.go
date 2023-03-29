@@ -8,6 +8,7 @@ import (
 
 	"github.com/duexcoast/webservice/app/services/sales-api/handlers/debug/checkgrp"
 	"github.com/duexcoast/webservice/app/services/sales-api/handlers/v1/testgrp"
+	"github.com/duexcoast/webservice/business/web/mid"
 	"github.com/duexcoast/webservice/foundation/web"
 	"go.uber.org/zap"
 )
@@ -30,8 +31,8 @@ func DebugStandardLibraryMux() *http.ServeMux {
 	return mux
 }
 
-// DebugMux registers all the debug standard library routes and then custom
-// debug application routes for the service. This bypassing the use of the
+// DebugMux registers all the debug standard library routes and the custom
+// debug application routes for the service, thus bypassing the use of the
 // DefaultServerMux. Using the DefaultServerMux would be a security risk since
 // a dependendency could inject a handler into our service without us knowing it.
 func DebugMux(build string, log *zap.SugaredLogger) http.Handler {
@@ -60,6 +61,7 @@ func APIMux(cfg APIMuxConfig) *web.App {
 	// Construct the web.App which holds all routes as well as common Middleware.
 	app := web.NewApp(
 		cfg.Shutdown,
+		mid.Logger(cfg.Log),
 	)
 
 	// Load the routes for teh different versions of the API.
