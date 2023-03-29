@@ -61,6 +61,6 @@ func APIMux(cfg APIMuxConfig) *web.App {
 		Log: cfg.Log,
 	}
 
-	app.Handle(http.MethodGet, "/v1/test", tgh.Test)
+	app.Handle(http.MethodGet, "v1", "/test", tgh.Test)
 	return app
 }
