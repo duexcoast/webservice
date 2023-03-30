@@ -18,9 +18,9 @@ COPY --from=build_sales-api /service/app/services/sales-api/sales-api /service/s
 WORKDIR /service
 CMD ["./sales-api"]
 
-LABEL	org.opencontainers.image.created="${BUILD_DATE}" \
-		org.opencontainers.image.title="sales-api" \
-    org.opencontainers.image.authors="Conor Ney" \
-    org.opencontainers.image.source="github.com/duexcoast/webservice" \
-    org.opencontainers.image.revision="${BUILD_REF}" \
-    org.opencontainers.image.vendor="duex coast"
+LABEL org.opencontainers.image.created="${BUILD_DATE}" \
+	  org.opencontainers.image.title="sales-api" \
+	  org.opencontainers.image.authors="Conor Ney" \
+	  org.opencontainers.image.source="github.com/duexcoast/webservice" \
+	  org.opencontainers.image.revision="${BUILD_REF}" \
+	  org.opencontainers.image.vendor="duex coast"
