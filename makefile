@@ -3,9 +3,17 @@ SHELL := /bin/bash
 
 # =============================================================================
 # Testing running system
-#
+
+# Testing Auth
+# curl -il http://localhost:3000/v1/testauth
+# curl -il -H "Authorization: Bearer ${TOKEN}" http://localhost:3000/v1/testauth
+
+
 # expvarmon -ports=":4000" -vars="build,requests,goroutines,errors,panics,mem:memstats.Alloc"
+
+# For testing load on the service.
 # hey -m GET -c 100 -n 10000 http://localhost:3000/v1/test
+
 
 # To generate a private/public key PEM file.
 # openssl genpkey -algorithm RSA -out private.pem -pkeyopt rsa_keygen_bits:2048
@@ -20,6 +28,12 @@ run:
 admin:
 	go run app/tooling/admin/main.go
 
+# ============================================================================= 
+# Running tests within the local computer
+test:
+	go test ./... -count=1
+	staticcheck -checks=all ./...
+#
 # ============================================================================= 
 # Building containers
 
@@ -70,6 +84,7 @@ kind-logs:
 
 kind-restart:
 	kubectl rollout restart deployment sales-pod --namespace=sales-system
+	# kubectl rollout restart deployment sales-pod
 
 kind-update: all kind-load kind-restart
 

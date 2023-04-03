@@ -1,3 +1,5 @@
+// Package handlers contains the full set of handler functions and routes
+// supported by the web api.
 package handlers
 
 import (
@@ -8,19 +10,20 @@ import (
 
 	"github.com/duexcoast/webservice/app/services/sales-api/handlers/debug/checkgrp"
 	"github.com/duexcoast/webservice/app/services/sales-api/handlers/v1/testgrp"
+	"github.com/duexcoast/webservice/business/sys/auth"
 	"github.com/duexcoast/webservice/business/web/mid"
 	"github.com/duexcoast/webservice/foundation/web"
 	"go.uber.org/zap"
 )
 
-// StandardLibraryMux registers all the debug routes from the standard library
+// DebugStandardLibraryMux registers all the debug routes from the standard library
 // into a new mux bypassing the use of the DefaultServerMux. Using the
 // DefaultServerMux would be a security risk since a dependency could inject a
 // handler into our service without us knowing it.
 func DebugStandardLibraryMux() *http.ServeMux {
 	mux := http.NewServeMux()
 
-	// Register all the standard libary debug endpoints
+	// Register all the standard library debug endpoints
 	mux.HandleFunc("/debug/pprof/", pprof.Index)
 	mux.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
 	mux.HandleFunc("/debug/pprof/profile", pprof.Profile)
@@ -53,6 +56,7 @@ func DebugMux(build string, log *zap.SugaredLogger) http.Handler {
 type APIMuxConfig struct {
 	Shutdown chan os.Signal
 	Log      *zap.SugaredLogger
+	Auth     *auth.Auth
 }
 
 // APIMux constructs an http.Handler with all application routes defined.
@@ -80,6 +84,7 @@ func v1(app *web.App, cfg APIMuxConfig) {
 		Log: cfg.Log,
 	}
 
-	app.Handle(http.MethodGet, "v1", "/test", tgh.Test)
+	app.Handle(http.MethodGet, version, "/test", tgh.Test)
+	app.Handle(http.MethodGet, version, "/testauth", tgh.Test, mid.Authenticate(cfg.Auth), mid.Authorize("ADMIN"))
 
 }
