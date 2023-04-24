@@ -59,7 +59,7 @@ func Authorize(roles ...string) web.Middleware {
 
 		h := func(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 
-			// If the context is missing this value return failure.
+			// If the context is missing this value, return failure.
 			claims, err := auth.GetClaims(ctx)
 			if err != nil {
 				return validate.NewRequestError(

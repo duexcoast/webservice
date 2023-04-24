@@ -1,8 +1,8 @@
 .git/
 .dockerignore
 .gitignore
+LICENSE
 zarf/docker/
 zarf/k8s/
-LICENSE
 makefile
 README.md
