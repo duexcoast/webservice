@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"crypto/x509"
 	"encoding/pem"
 	"errors"
@@ -9,15 +10,43 @@ import (
 	"os"
 	"time"
 
+	"github.com/duexcoast/webservice/business/data/schema"
+	"github.com/duexcoast/webservice/business/sys/database"
 	"github.com/golang-jwt/jwt/v5"
 )
 
 func main() {
-	err := genToken()
+	err := migrate()
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+}
+
+func migrate() error {
+	cfg := database.Config{
+		User:         "postgres",
+		Password:     "postgres",
+		Host:         "localhost",
+		Name:         "postgres",
+		MaxIdleConns: 0,
+		MaxOpenConns: 0,
+		DisableTLS:   true,
+	}
+
+	db, err := database.Open(cfg)
+	if err != nil {
+		return fmt.Errorf("connect database: %w", err)
+	}
+	defer db.Close()
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	if err := schema.Migrate(ctx, db); err != nil {
+		return fmt.Errorf("migrate database: %w", err)
+	}
+	fmt.Println("migrations complete.")
+	return nil
 }
 
 func genToken() error {
@@ -86,8 +115,8 @@ func genToken() error {
 	// Marshal the public key
 	asn1Bytes, err := x509.MarshalPKIXPublicKey(&privateKey.PublicKey)
 	if err != nil {
-		return err
 	}
+	return err
 
 	// Construct a PEM block for the private key.
 	publicBlock := pem.Block{

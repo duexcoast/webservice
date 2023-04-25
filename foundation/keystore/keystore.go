@@ -1,5 +1,6 @@
 // Package keystore implements the auth.KeyStore interface. This implements
 // an in-memory keystore for JWT support.
+
 package keystore
 
 import (
@@ -102,8 +103,7 @@ func (ks *KeyStore) Remove(kid string) {
 	delete(ks.store, kid)
 }
 
-// PrivateKey searches the key store for a given kid (key id) and returns the
-// private key.
+// PrivateKey searches the key store for a given kid and returns the private key.
 func (ks *KeyStore) PrivateKey(kid string) (*rsa.PrivateKey, error) {
 	ks.mu.Lock()
 	defer ks.mu.Unlock()
