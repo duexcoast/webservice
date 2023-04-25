@@ -52,7 +52,7 @@ func New(activeKID string, keyLookup KeyLookup) (*Auth, error) {
 		return keyLookup.PublicKey(kidID)
 	}
 
-	// Create the token parsr ot use. The algorithm used to sign the JWT must be
+	// Create the token parser to use. The algorithm used to sign the JWT must be
 	// validated to avoid a critical vulnerability:
 	// https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries/
 
